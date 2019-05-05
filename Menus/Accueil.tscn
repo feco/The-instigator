@@ -1,0 +1,30 @@
+[gd_scene format=2]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="CreerBouton" type="Button" parent="."]
+margin_left = 893.018
+margin_top = 502.726
+margin_right = 996.018
+margin_bottom = 522.726
+text = "Créer une partie"
+
+[node name="RejoindreBouton" type="Button" parent="."]
+margin_left = 882.228
+margin_top = 551.812
+margin_right = 1024.23
+margin_bottom = 571.812
+text = "Rejoindre une partie"
+
+[node name="PseudoLabel" type="Label" parent="."]
+margin_left = 908.526
+margin_top = 93.308
+margin_right = 993.526
+margin_bottom = 107.308
+text = "Votre pseudo"
+
+[node name="PseudoTextEdit" type="TextEdit" parent="."]
+margin_left = 857.0
+margin_top = 126.0
+margin_right = 1063.0
+margin_bottom = 149.0

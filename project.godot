@@ -16,7 +16,13 @@ _global_script_class_icons={
 [application]
 
 config/name="The-instigator"
+run/main_scene="res://Menus/Accueil.tscn"
 config/icon="res://icon.png"
+
+[display]
+
+window/size/width=1920
+window/size/height=1080
 
 [rendering]
 

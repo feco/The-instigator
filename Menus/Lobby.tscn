@@ -19,3 +19,11 @@ margin_left = 167.0
 margin_top = 155.0
 margin_right = 947.0
 margin_bottom = 780.0
+
+[node name="LancerJeuBouton" type="Button" parent="."]
+margin_left = 835.27
+margin_top = 1035.25
+margin_right = 945.27
+margin_bottom = 1055.25
+text = "Lancer la partie"
+[connection signal="pressed" from="LancerJeuBouton" to="." method="_on_LancerJeuBouton_pressed"]

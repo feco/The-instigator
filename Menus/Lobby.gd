@@ -4,6 +4,7 @@ func _ready():
 	#Si c'est le serveur qui viens de créer le lobby alors il met son pseudo dans la liste et se défini comme maître
 	if get_tree().get_network_unique_id() == 0:
 		print ("Je suis le serveur")
+		globals.est_serveur = true
 		globals.liste_des_joueurs[get_tree().get_network_unique_id()] = globals.mon_pseudo
 		$ListeDesJoueurs.text += globals.mon_pseudo+"\n"
 		#set_network_master(0)
@@ -34,3 +35,17 @@ sync func _mettreAJour_joueurs (liste):
 	$ListeDesJoueurs.text = ""
 	for joueur in globals.liste_des_joueurs:
 		$ListeDesJoueurs.text += globals.liste_des_joueurs[joueur]+"\n"
+
+
+
+func _on_LancerJeuBouton_pressed():
+	print("Clique sur lancer partie")
+	if globals.est_serveur:
+		print("Je suis le serveur")
+		rpc("_lancer_jeu")
+
+sync func _lancer_jeu():
+	print("lancement de la partie")
+	hide()
+	var jeu = preload("res://Jeu/Jeu.tscn").instance()
+	get_tree().get_root().add_child(jeu)

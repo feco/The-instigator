@@ -8,6 +8,11 @@ func _on_RejoindreBouton_pressed():
 	$IPServeur.show()
 
 
+func _on_RetourBouton_pressed():
+	$IPServeur.hide()
+	$Accueil.show()
+
+
 # Quand l'IP a été rentrée, si elle semble valide le joueur peut tenter de se connecter à l'hote
 func _on_ConnecterBouton_pressed():
 	if $IPServeur/IPTextEdit.text.length() > 7 :
@@ -57,3 +62,4 @@ func _on_CreerBouton_pressed():
 #Quand le joueur a fini d'écrire son pseudo on l'enregistre dans le script global pour plus tard
 func _on_PseudoTextEdit_focus_exited():
 	globals.mon_pseudo = $Accueil/PseudoTextEdit.text
+

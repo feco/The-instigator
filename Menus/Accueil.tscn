@@ -66,6 +66,13 @@ margin_right = 981.118
 margin_bottom = 219.812
 text = "Se connecter"
 
+[node name="RetourBouton" type="Button" parent="IPServeur"]
+margin_left = 886.118
+margin_top = 248.908
+margin_right = 981.118
+margin_bottom = 268.908
+text = "Retour"
+
 [node name="ErreurLabel" type="Label" parent="IPServeur"]
 margin_left = 788.634
 margin_top = 292.495
@@ -75,3 +82,4 @@ margin_bottom = 306.495
 [connection signal="pressed" from="Accueil/RejoindreBouton" to="." method="_on_RejoindreBouton_pressed"]
 [connection signal="focus_exited" from="Accueil/PseudoTextEdit" to="." method="_on_PseudoTextEdit_focus_exited"]
 [connection signal="pressed" from="IPServeur/ConnecterBouton" to="." method="_on_ConnecterBouton_pressed"]
+[connection signal="pressed" from="IPServeur/RetourBouton" to="." method="_on_RetourBouton_pressed"]

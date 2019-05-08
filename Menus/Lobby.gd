@@ -5,7 +5,7 @@ func _ready():
 	if get_tree().get_network_unique_id() == 0:
 		print ("Je suis le serveur")
 		globals.est_serveur = true
-		globals.liste_des_joueurs[get_tree().get_network_unique_id()] = globals.mon_pseudo
+		globals.liste_des_joueurs.append({"id" : get_tree().get_network_unique_id(), "pseudo" : globals.mon_pseudo})
 		$ListeDesJoueurs.text += globals.mon_pseudo+"\n"
 		#set_network_master(0)
 	else : #Sinon le client va prévenir de sa connexion et envoyer son pseudo au serveur
@@ -23,7 +23,7 @@ master func _joueur_a_rejoin(id):
 #Fonction pour envoyer le pseudo du joueur nouvellement connecté au serveur
 master func _definir_nom_joueur(id, pseudo):
 	print("Ce joueur a communiqué son id et son pseudo : " + pseudo)
-	globals.liste_des_joueurs[id] = pseudo
+	globals.liste_des_joueurs.append({"id" : id, "pseudo" : pseudo})
 	$ListeDesJoueurs.text += pseudo+"\n"
 	rpc("_mettreAJour_joueurs", globals.liste_des_joueurs)
 
@@ -34,16 +34,16 @@ sync func _mettreAJour_joueurs (liste):
 	globals.liste_des_joueurs = liste
 	$ListeDesJoueurs.text = ""
 	for joueur in globals.liste_des_joueurs:
-		$ListeDesJoueurs.text += globals.liste_des_joueurs[joueur]+"\n"
+		$ListeDesJoueurs.text += joueur["pseudo"]+"\n"
 
 
-
+#Quand on clique sur lancer une partie, seul le serveur peut lancer la partie et seulement si au moins 3 joueurs sont présents
 func _on_LancerJeuBouton_pressed():
-	print("Clique sur lancer partie")
-	if globals.est_serveur:
+	if globals.est_serveur && globals.liste_des_joueurs.size()  >= 3:
 		print("Je suis le serveur")
 		rpc("_lancer_jeu")
 
+#Lancement de la partie pour tous les joueurs parce que le serveur l'a demandé.
 sync func _lancer_jeu():
 	print("lancement de la partie")
 	hide()

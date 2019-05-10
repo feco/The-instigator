@@ -15,21 +15,21 @@ func _on_RetourBouton_pressed():
 
 # Quand l'IP a été rentrée, si elle semble valide le joueur peut tenter de se connecter à l'hote
 func _on_ConnecterBouton_pressed():
-	if $IPServeur/IPTextEdit.text.length() > 7 :
+	if $IPServeur/MargeDeInterface/ArrangementHorizontal/IPTextEdit.text.length() > 7 :
 		var reseau = NetworkedMultiplayerENet.new()
-		reseau.create_client($IPServeur/IPTextEdit.text, 4243)
+		reseau.create_client($IPServeur/MargeDeInterface/ArrangementHorizontal/IPTextEdit.text, 4243)
 		get_tree().set_network_peer(reseau)
 		reseau.connect("connection_failed", self, "_on_echec_connexion")
 		reseau.connect("connection_succeeded", self, "_on_succes_connexion")
 		print("Test de la connexion...")
 	else :
-		$IPServeur/ErreurLabel.text = "Veuillez entrer une adresse IP valide"
+		$IPServeur/MargeDeInterface/ArrangementHorizontal/ErreurLabel.text = "Veuillez entrer une adresse IP valide"
 
 
 #Affiche un message si le joueur n'a pas pu se connecter à l'hote
 func _on_echec_connexion(erreur):
 	print("Echec connexion")
-	$IPServeur/ErreurLabel.text = "Erreur à la connexion : " + erreur
+	$IPServeur/MargeDeInterface/ArrangementHorizontal/ErreurLabel.text = "Erreur à la connexion : " + erreur
 
 #Affiche le lobby si le joueur a pu se connecter
 func _on_succes_connexion():
@@ -61,5 +61,5 @@ func _on_CreerBouton_pressed():
 
 #Quand le joueur a fini d'écrire son pseudo on l'enregistre dans le script global pour plus tard
 func _on_PseudoTextEdit_focus_exited():
-	globals.mon_pseudo = $Accueil/PseudoTextEdit.text
+	globals.mon_pseudo = $Accueil/MargeDeInterface/CenterContainer/ArrangementHorizontal/VBoxContainer/PseudoTextEdit.text
 

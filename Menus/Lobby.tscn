@@ -7,23 +7,36 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
 
-[node name="Label" type="Label" parent="."]
-margin_left = 852.05
-margin_top = 22.0993
-margin_right = 892.05
-margin_bottom = 36.0993
+[node name="MargeDeInterface" type="MarginContainer" parent="."]
+margin_right = 1920.0
+margin_bottom = 1080.0
+custom_constants/margin_right = 50
+custom_constants/margin_top = 50
+custom_constants/margin_left = 50
+custom_constants/margin_bottom = 50
+
+[node name="Label" type="Label" parent="MargeDeInterface"]
+margin_left = 938.0
+margin_top = 50.0
+margin_right = 981.0
+margin_bottom = 64.0
+size_flags_horizontal = 4
+size_flags_vertical = 0
 text = "LOBBY"
+align = 1
+
+[node name="LancerJeuBouton" type="Button" parent="MargeDeInterface"]
+margin_left = 905.0
+margin_top = 1010.0
+margin_right = 1015.0
+margin_bottom = 1030.0
+size_flags_horizontal = 4
+size_flags_vertical = 8
+text = "Lancer la partie"
 
 [node name="ListeDesJoueurs" type="Label" parent="."]
 margin_left = 167.0
 margin_top = 155.0
-margin_right = 947.0
-margin_bottom = 780.0
-
-[node name="LancerJeuBouton" type="Button" parent="."]
-margin_left = 835.27
-margin_top = 1035.25
-margin_right = 945.27
-margin_bottom = 1055.25
-text = "Lancer la partie"
-[connection signal="pressed" from="LancerJeuBouton" to="." method="_on_LancerJeuBouton_pressed"]
+margin_right = 1987.0
+margin_bottom = 169.0
+[connection signal="pressed" from="MargeDeInterface/LancerJeuBouton" to="." method="_on_LancerJeuBouton_pressed"]

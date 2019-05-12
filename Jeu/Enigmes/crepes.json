@@ -1,0 +1,4 @@
+{
+	"question": "Quel est le jour des crêpes ?",
+	"choix": [ "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche" ]
+}

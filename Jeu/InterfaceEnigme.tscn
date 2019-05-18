@@ -1,7 +1,11 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Jeu/InterfaceEnigme.gd" type="Script" id=1]
 [ext_resource path="res://arial.ttf" type="DynamicFontData" id=2]
+
+[sub_resource type="DynamicFont" id=3]
+size = 60
+font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=2]
 size = 50
@@ -26,11 +30,19 @@ margin_top = 50.0
 margin_right = 1870.0
 margin_bottom = 1030.0
 
-[node name="PartieHaute" type="Container" parent="DécoupageInterfaceEn2"]
+[node name="PartieHaute" type="CenterContainer" parent="DécoupageInterfaceEn2"]
 margin_right = 1820.0
 margin_bottom = 488.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="Victoire" type="Label" parent="DécoupageInterfaceEn2/PartieHaute"]
+margin_left = 910.0
+margin_top = 210.0
+margin_right = 910.0
+margin_bottom = 278.0
+size_flags_vertical = 0
+custom_fonts/font = SubResource( 3 )
 
 [node name="Enigme" type="VBoxContainer" parent="DécoupageInterfaceEn2"]
 margin_top = 492.0

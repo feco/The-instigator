@@ -5,7 +5,12 @@ var enigme_actuelle
 var reponses_joueurs = []
 var enigme_en_cours = false
 var enigme_finie = false
+var vote_en_cours = false
+var votes_tour = []
+var votes_total = []
+var tour = 0
 var instigateur
+var envoyer_vote_instigateur = false
 
 #Initialisation du jeu
 func _ready():
@@ -19,12 +24,29 @@ func _ready():
 		_poser_enigme()
 
 
+#Fonction qui s'exécute régulièrement
 func _process(delta):
 	if globals.est_serveur:
 		if enigme_en_cours:
 			if reponses_joueurs.size() >= globals.liste_des_joueurs.size():
 				enigme_en_cours = false
 				rpc("_proposer_options_instigateur", reponses_joueurs);
+		elif vote_en_cours:
+			if envoyer_vote_instigateur :
+				rpc("_vote_qui_instigateur")
+				envoyer_vote_instigateur = false
+			var compte_vote = 0
+			for vote in votes_tour:
+				compte_vote += vote["compte"]
+			if compte_vote >= globals.liste_des_joueurs.size():
+				vote_en_cours = false
+				_fusion_votes()
+				tour += 1
+				if tour < 10 :
+					_poser_enigme()
+				else :
+					var gagnant = _qui_a_gagne()
+					rpc("_afficher_fin_jeu", gagnant)
 
 
 
@@ -51,9 +73,37 @@ func _recuperer_nom_par_id(id):
 		if joueur["id"] == id:
 			return joueur["pseudo"]
 
+#Fonction qui trouve l'id d'un joueur en fonction de son pseudo
+func _recuperer_id_par_nom(nom):
+	for joueur in globals.liste_des_joueurs:
+		if joueur["pseudo"] == nom:
+			return joueur["id"]
+
+#Fonction qui ajoute le compte des votes pour le tour au compte des votes total
+func _fusion_votes():
+	for vote_tour in votes_tour:
+		var vote_comptabilise = false
+		for vote_total in votes_total:
+			if vote_total["pseudo"] == vote_tour["pseudo"]:
+				vote_total["compte"] += vote_tour["compte"]
+				vote_comptabilise = true
+		if !vote_comptabilise:
+			votes_total.append(vote_tour)
 
 
-
+func _qui_a_gagne():
+	var perdant = null
+	var point_perdant = 0
+	for vote in votes_total:
+		if point_perdant < vote["compte"]:
+			point_perdant = vote["compte"]
+			perdant = vote["pseudo"]
+	
+	var id_perdant = _recuperer_id_par_nom(perdant)
+	if id_perdant == instigateur["id"]:
+		return "joueurs"
+	else:
+		return "instigateur"
 
 
 # --------- ENIGME côté serveur ---------
@@ -124,14 +174,25 @@ remote func _reponse_joueur(reponse, id_appelant):
 					return
 			
 			reponses_joueurs.append({"id_joueur" : id_appelant, "reponse" : reponse})
+		elif vote_en_cours:
+			var vote_comptabiliser = false
+			for vote in votes_tour:
+				if vote["pseudo"] == reponse:
+					vote["compte"] += 1
+					vote_comptabiliser = true
+			if !vote_comptabiliser:
+				votes_tour.append({"pseudo":reponse, "compte":1})
+		
 		elif id_appelant == instigateur["id"]:
 			print("Traitement du choix de l'instigateur")
 			traiter_choix_instigateur(reponse)
 
 #Fonction qui gère le choix de l'instigateur après une énigme
 func traiter_choix_instigateur(reponse):
-	pass
-
+	#Ajouter le traitement des choix de l'instigateur ici
+	
+	vote_en_cours = true
+	envoyer_vote_instigateur = true
 
 
 
@@ -141,8 +202,23 @@ func traiter_choix_instigateur(reponse):
 
 #Fonction qui affiche l'énigme sélectionnée par le serveur aux clients
 sync func _joueurs_afficher_enigme(enigme_numero):
+	vote_en_cours = false
+	votes_tour = []
+	reponses_joueurs = []
+	
 	enigme_actuelle = enigme_numero
 	$InterfaceEnigme._preparer(enigmes[enigme_actuelle])
+	$InterfaceEnigme.show()
+
+
+#Fonction qui permet d'afficher le vote à la recherche de l'instigateur
+sync func _vote_qui_instigateur():
+	print("Vote qui est instigateur")
+	var joueurs = []
+	for joueur in globals.liste_des_joueurs:
+		joueurs.append(joueur["pseudo"])
+	var enigme = {"question": "Qui est l'instigateur ?", "choix": joueurs}
+	$InterfaceEnigme._preparer(enigme)
 	$InterfaceEnigme.show()
 
 #Fonction qui affiche à l'instigateur ses choix après une énigme
@@ -153,7 +229,7 @@ sync func _proposer_options_instigateur(reponses_joueurs):
 		for reponse in reponses_joueurs :
 			choix_joueurs += _recuperer_nom_par_id(reponse["id_joueur"]) + " a voté " + reponse["reponse"] + ";"
 		var enigme = {"question": "En tant qu'instigateur que souhaitez-vous faire ?", "choix":["1", "2", "3", "4"]}
-		print("Enigme to prepare :")
+		print("Enigme à preparer :")
 		print(enigme)
 		$InterfaceEnigme._preparer(enigme, choix_joueurs)
 		$InterfaceEnigme.show()
@@ -168,8 +244,35 @@ func _on_reponse(reponse):
 					return
 			
 			reponses_joueurs.append({"id_joueur" : 0, "reponse" : reponse})
+			
+			
+		elif vote_en_cours:
+			var vote_comptabiliser = false
+			for vote in votes_tour:
+				if vote["pseudo"] == reponse:
+					vote["compte"] += 1
+					vote_comptabiliser = true
+			if !vote_comptabiliser:
+				votes_tour.append({"pseudo":reponse, "compte":1})
+		
+		
 		elif 0 == instigateur["id"]:
 			print("Traitement du choix de l'instigateur")
 			traiter_choix_instigateur(reponse)
 	else:
 		rpc("_reponse_joueur", reponse, get_tree().get_network_unique_id())
+
+
+sync func _afficher_fin_jeu(gagnant):
+	var message = null
+	if gagnant == "instigateur":
+		if globals.est_instigateur :
+			message = "Victoire!"
+		else : 
+			message = "Défaite"
+	else :
+		if globals.est_instigateur:
+			message = "Défaite"
+		else : 
+			message = "Victoire"
+	$InterfaceEnigme._fin(message)

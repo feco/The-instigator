@@ -1,7 +1,11 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Jeu/InterfaceEnigme.gd" type="Script" id=1]
-[ext_resource path="res://RiseofKingdom.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://arial.ttf" type="DynamicFontData" id=2]
+
+[sub_resource type="DynamicFont" id=2]
+size = 50
+font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=1]
 size = 60
@@ -35,14 +39,20 @@ margin_bottom = 980.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Question" type="Label" parent="DécoupageInterfaceEn2/Enigme"]
+[node name="Votes" type="Label" parent="DécoupageInterfaceEn2/Enigme"]
 margin_right = 1820.0
-margin_bottom = 60.0
+margin_bottom = 57.0
+custom_fonts/font = SubResource( 2 )
+
+[node name="Question" type="Label" parent="DécoupageInterfaceEn2/Enigme"]
+margin_top = 61.0
+margin_right = 1820.0
+margin_bottom = 129.0
 custom_fonts/font = SubResource( 1 )
 text = "Question"
 
 [node name="Défilement" type="ScrollContainer" parent="DécoupageInterfaceEn2/Enigme"]
-margin_top = 64.0
+margin_top = 133.0
 margin_right = 1820.0
 margin_bottom = 488.0
 size_flags_horizontal = 3
